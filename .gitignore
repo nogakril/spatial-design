@@ -1,0 +1,15 @@
+# Bytecode files
+__pycache__/
+*.py[cod]
+
+# Images and gallery content
+gallery/images/
+
+# OS & editor stuff
+.DS_Store
+*.swp
+
+# Python environment
+.env
+venv/
+*.log
