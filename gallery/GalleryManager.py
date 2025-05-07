@@ -1,7 +1,7 @@
 import json
 import os
 
-from Photo import Photo
+from gallery.Photo import Photo
 
 
 class GalleryManager:
@@ -50,6 +50,9 @@ class GalleryManager:
         if self.current_sibling_index > 0:
             self.current_sibling_index -= 1
             self.current_photo = siblings[self.current_sibling_index]
+        else:
+            self.current_sibling_index = len(siblings) - 1
+            self.current_photo = siblings[self.current_sibling_index]
 
     def move_right(self):
         siblings = (
@@ -59,6 +62,9 @@ class GalleryManager:
         )
         if self.current_sibling_index < len(siblings) - 1:
             self.current_sibling_index += 1
+            self.current_photo = siblings[self.current_sibling_index]
+        else:
+            self.current_sibling_index = 0
             self.current_photo = siblings[self.current_sibling_index]
 
     def get_current_photo(self) -> Photo:
@@ -81,3 +87,18 @@ class GalleryManager:
             self.current_photo = self.root_photos[0]
             self.current_sibling_index = 0
         print("Gallery structure loaded.")
+
+    def can_move_up(self):
+        return self.current_photo.parent is not None
+
+    def can_move_down(self):
+        return len(self.current_photo.children) > 0
+
+    def can_move_left_right(self):
+        siblings = (
+            self.current_photo.parent.children
+            if self.current_photo.parent
+            else self.root_photos
+        )
+        return len(siblings) > 1
+

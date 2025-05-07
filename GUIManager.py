@@ -1,21 +1,12 @@
 import pygame
 import os
 
-from Photo import Photo
-
-
-def load_image(path, scale=None):
-    if not os.path.exists(path):
-        return None
-    img = pygame.image.load(path)
-    if scale:
-        img = pygame.transform.scale(img, scale)
-    return img
+from gallery.Photo import Photo
 
 
 class GUIManager:
     def __init__(self, gallery_manager, logo_path="gallery/logo.png", buttons_controller=None,
-                 camera_manager=None):
+                 camera_manager=None, led_controller=None):
         self.gallery_manager = gallery_manager
         self.window_width, self.window_height = (None, None)
         self.logo_path = logo_path
@@ -24,16 +15,17 @@ class GUIManager:
         self.running = True
         self.buttonsController = buttons_controller
         self.camera = camera_manager
+        self.leds = led_controller
         self.clock = pygame.time.Clock()
 
     def start(self):
         pygame.init()
         info = pygame.display.Info()
         self.window_width, self.window_height = info.current_w, info.current_h
-        self.screen = pygame.display.set_mode(( self.window_width, self.window_height)) #, pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((self.window_width, self.window_height))  # , pygame.FULLSCREEN)
         pygame.display.set_caption("Photo Gallery")
 
-        self.logo = load_image(self.logo_path, (self.window_width * 0.2, self.window_height * 0.1))
+        self.logo = self._load_image(self.logo_path, scale=(self.window_width * 0.2, self.window_height * 0.1))
 
         while self.running:
             self.handle_events()
@@ -109,26 +101,39 @@ class GUIManager:
         if photo:
             self.draw_photo(photo.file_path)
 
-            # Draw child indicator
-            if photo.children:
-                self.draw_child_indicator(True)
-            else:
-                self.draw_child_indicator(False)
+            # Draw arrows
+            directions = ['UP', 'DOWN', 'LEFT', 'RIGHT']
+            check_methods = {
+                'UP': self.gallery_manager.can_move_up,
+                'DOWN': self.gallery_manager.can_move_down,
+                'LEFT': self.gallery_manager.can_move_left_right,
+                'RIGHT': self.gallery_manager.can_move_left_right
+            }
+
+            for direction in directions:
+                if check_methods[direction]():
+                    self.leds.turn_on_led(direction)
+                    print(f"Light arrow {direction.lower()}")
+                else:
+                    self.leds.turn_off_led(direction)
 
     def draw_photo(self, path):
         if not os.path.exists(path):
             return
         photo_img = pygame.image.load(path)
-        photo_img = self.scale_to_fit(photo_img)
+        photo_img = self._scale_to_fit(photo_img)
         rect = photo_img.get_rect(center=(self.window_width // 2, self.window_height // 2))
         self.screen.blit(photo_img, rect)
 
-    def scale_to_fit(self, image):
+    def _scale_to_fit(self, image):
         iw, ih = image.get_size()
         scale = 0.5
         return pygame.transform.scale(image, (int(iw * scale), int(ih * scale)))
 
-    def draw_child_indicator(self, has_children):
-        color = (0, 255, 0) if has_children else (255, 0, 0)
-        radius = 10
-        pygame.draw.circle(self.screen, color, (self.window_width - 30, 30), radius)
+    def _load_image(self, path, scale=None):
+        if not os.path.exists(path):
+            return None
+        img = pygame.image.load(path)
+        if scale:
+            img = pygame.transform.scale(img, scale)
+        return img
