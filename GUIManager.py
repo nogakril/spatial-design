@@ -6,7 +6,7 @@ from gallery.Photo import Photo
 
 class GUIManager:
     def __init__(self, gallery_manager, logo_path="gallery/logo.png", arduino_controller=None,
-                 camera_manager=None, led_controller=None):
+                 camera_manager=None):
         self.gallery_manager = gallery_manager
         self.window_width, self.window_height = (None, None)
         self.logo_path = logo_path
@@ -15,7 +15,6 @@ class GUIManager:
         self.running = True
         self.arduino_controller = arduino_controller
         self.camera = camera_manager
-        self.leds = led_controller
         self.clock = pygame.time.Clock()
 
     def start(self):
