@@ -5,7 +5,7 @@ from gallery.Photo import Photo
 
 
 class GUIManager:
-    def __init__(self, gallery_manager, logo_path="gallery/logo.png", buttons_controller=None,
+    def __init__(self, gallery_manager, logo_path="gallery/logo.png", arduino_controller=None,
                  camera_manager=None, led_controller=None):
         self.gallery_manager = gallery_manager
         self.window_width, self.window_height = (None, None)
@@ -13,7 +13,7 @@ class GUIManager:
         self.logo = None
         self.screen = None
         self.running = True
-        self.buttonsController = buttons_controller
+        self.arduino_controller = arduino_controller
         self.camera = camera_manager
         self.leds = led_controller
         self.clock = pygame.time.Clock()
@@ -31,9 +31,9 @@ class GUIManager:
             self.handle_events()
             # Check for button events
 
-            # buttons_input_event = self.buttonsController.get_input()
+            # arduino_input_event = self.arduino_controller.get_input()
             # if buttons_input_event:
-            #     self.process_buttons_input(buttons_input_event)
+            #     self.process_arduino_input(arduino_input_event)
             self.render()
             pygame.display.flip()
             self.clock.tick(30)
@@ -63,11 +63,11 @@ class GUIManager:
                 if event.key == pygame.K_RIGHT:
                     self.on_joystick_move('RIGHT')
 
-    def process_buttons_input(self, buttons_input_event):
-        if buttons_input_event.get('joystick'):
-            self.on_joystick_move(buttons_input_event['joystick'])
-        if buttons_input_event.get('button'):
-            self.on_button_press(buttons_input_event['button'])
+    def process_arduino_input(self, buttons_arduino_event):
+        if buttons_arduino_event.get('joystick'):
+            self.on_joystick_move(buttons_arduino_event['joystick'])
+        if buttons_arduino_event.get('button'):
+            self.on_button_press(buttons_arduino_event['button'])
 
     def on_joystick_move(self, direction: str):
         if direction == 'UP':
