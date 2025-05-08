@@ -31,9 +31,9 @@ class GUIManager:
             self.handle_events()
             # Check for button events
 
-            # arduino_input_event = self.arduino_controller.get_input()
-            # if buttons_input_event:
-            #     self.process_arduino_input(arduino_input_event)
+            arduino_input_event = self.arduino_controller.get_input()
+            if arduino_input_event:
+                self.process_arduino_input(arduino_input_event)
             self.render()
             pygame.display.flip()
             self.clock.tick(30)
@@ -50,23 +50,24 @@ class GUIManager:
                     self.running = False
 
                 # Remove when joystick is implemented
-                if event.key == pygame.K_SPACE:
-                    self.on_button_press("SAVE")
-                if event.key == pygame.K_CAPSLOCK:
-                    self.on_button_press("CONNECT")
-                if event.key == pygame.K_UP:
-                    self.on_joystick_move('UP')
-                if event.key == pygame.K_DOWN:
-                    self.on_joystick_move('DOWN')
-                if event.key == pygame.K_LEFT:
-                    self.on_joystick_move('LEFT')
-                if event.key == pygame.K_RIGHT:
-                    self.on_joystick_move('RIGHT')
+                # if event.key == pygame.K_SPACE:
+                #     self.on_button_press("SAVE")
+                # if event.key == pygame.K_CAPSLOCK:
+                #     self.on_button_press("CONNECT")
+                # if event.key == pygame.K_UP:
+                #     self.on_joystick_move('UP')
+                # if event.key == pygame.K_DOWN:
+                #     self.on_joystick_move('DOWN')
+                # if event.key == pygame.K_LEFT:
+                #     self.on_joystick_move('LEFT')
+                # if event.key == pygame.K_RIGHT:
+                #     self.on_joystick_move('RIGHT')
 
     def process_arduino_input(self, buttons_arduino_event):
         if buttons_arduino_event.get('joystick'):
             self.on_joystick_move(buttons_arduino_event['joystick'])
         if buttons_arduino_event.get('button'):
+            print(f"Button pressed: {buttons_arduino_event['button']}")
             self.on_button_press(buttons_arduino_event['button'])
 
     def on_joystick_move(self, direction: str):
@@ -84,7 +85,7 @@ class GUIManager:
             path = self.camera.capture_photo()
             new_photo = Photo(file_path=path)
             self.gallery_manager.add_root_photo(new_photo)
-        elif button == 'CONNECT':
+        elif button == 'COMMENT':
             path = self.camera.capture_photo()
             new_photo = Photo(file_path=path)
             self.gallery_manager.connect_new_child(new_photo)
@@ -110,12 +111,12 @@ class GUIManager:
                 'RIGHT': self.gallery_manager.can_move_left_right
             }
 
-            for direction in directions:
-                if check_methods[direction]():
-                    self.leds.turn_on_led(direction)
-                    print(f"Light arrow {direction.lower()}")
-                else:
-                    self.leds.turn_off_led(direction)
+            # for direction in directions:
+            #     if check_methods[direction]():
+            #         self.leds.turn_on_led(direction)
+            #         print(f"Light arrow {direction.lower()}")
+            #     else:
+            #         self.leds.turn_off_led(direction)
 
     def draw_photo(self, path):
         if not os.path.exists(path):

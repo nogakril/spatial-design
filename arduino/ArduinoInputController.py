@@ -3,7 +3,7 @@ import threading
 
 
 class ArduinoInputController:
-    def __init__(self, port="/dev/ttyUSB0", baudrate=9600):
+    def __init__(self, port="/dev/cu.usbmodem1101", baudrate=9600):
         self.ser = serial.Serial(port, baudrate, timeout=1)
         self.last_button = None
         self.last_joystick = None
@@ -15,7 +15,7 @@ class ArduinoInputController:
     def _listen(self):
         while self.running:
             line = self.ser.readline().decode().strip()
-            if line in ['SAVE', 'CONNECT']:
+            if line in ['SAVE', 'COMMENT']:
                 self.last_button = line
                 print(f"Button: {line}")
             elif line in ['UP', 'DOWN', 'LEFT', 'RIGHT']:

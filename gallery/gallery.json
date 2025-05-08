@@ -3,7 +3,21 @@
     "id": "67ab778a-4365-4ca9-b7f7-e58c1b4e965d",
     "file_path": "gallery/images/photo_20250507_111558.jpg",
     "timestamp": "2025-05-07T11:15:58.348032",
-    "children": []
+    "children": [
+      {
+        "id": "bd7a4fa2-332b-4c98-953d-057b8640a449",
+        "file_path": "gallery/images/photo_20250508_154152.jpg",
+        "timestamp": "2025-05-08T15:41:52.505660",
+        "children": [
+          {
+            "id": "fac0ed4d-cebe-42f8-bc02-8dd21fc54d2b",
+            "file_path": "gallery/images/photo_20250508_154152.jpg",
+            "timestamp": "2025-05-08T15:41:52.847736",
+            "children": []
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "4d98ed8c-f847-442a-8684-453e2dbc59e4",
