@@ -2,7 +2,7 @@ import serial
 import threading
 
 
-class ArduinoInputController:
+class ArduinoController:
     def __init__(self, port="/dev/cu.usbmodem1101", baudrate=9600):
         self.ser = serial.Serial(port, baudrate, timeout=1)
         self.last_button = None
@@ -31,6 +31,11 @@ class ArduinoInputController:
         self.last_button = None
         self.last_joystick = None
         return input_state
+
+    def send_led_states(self, directions):
+        command = "LED:" + ",".join(directions).upper() + "\n"
+        self.ser.write(command.encode("utf-8"))
+        print(f"Sent LED command: {command.strip()}")
 
     def cleanup(self):
         self.running = False

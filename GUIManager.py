@@ -110,12 +110,9 @@ class GUIManager:
                 'RIGHT': self.gallery_manager.can_move_left_right
             }
 
-            # for direction in directions:
-            #     if check_methods[direction]():
-            #         self.leds.turn_on_led(direction)
-            #         print(f"Light arrow {direction.lower()}")
-            #     else:
-            #         self.leds.turn_off_led(direction)
+            directions = [direction for direction in directions if check_methods[direction]()]
+            if directions:
+                self.arduino_controller.send_led_states(directions)
 
     def draw_photo(self, path):
         if not os.path.exists(path):
