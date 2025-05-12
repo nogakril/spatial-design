@@ -3,6 +3,8 @@ import os
 
 from gallery.Photo import Photo
 
+os.environ['SDL_VIDEO_WINDOW_POS'] = "1920,0"
+
 
 class GUIManager:
     def __init__(self, gallery_manager, logo_path="gallery/logo.png", arduino_controller=None,
@@ -20,8 +22,8 @@ class GUIManager:
     def start(self):
         pygame.init()
         info = pygame.display.Info()
-        self.window_width, self.window_height = info.current_w, info.current_h
-        self.screen = pygame.display.set_mode((self.window_width, self.window_height))  # , pygame.FULLSCREEN)
+        self.window_width, self.window_height = info.current_w, info.current_h ## 1512x982
+        self.screen = pygame.display.set_mode((self.window_width, self.window_height)) # , pygame.FULLSCREEN)
         pygame.display.set_caption("Photo Gallery")
 
         self.logo = self._load_image(self.logo_path, scale=(self.window_width * 0.2, self.window_height * 0.1))
