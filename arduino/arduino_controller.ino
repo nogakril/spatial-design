@@ -3,36 +3,44 @@ const int pinY = A0;
 const int upload = 2;
 const int comment = 4;
 
-// const int UP_LED = 5;
-// const int DOWN_LED = 6;
-// const int LEFT_LED = 13;
-// const int RIGHT_LED = 12;
+const int UP_LED = 7;
+const int DOWN_LED = 8;
+const int LEFT_LED = 3;
+const int RIGHT_LED = 12;
 
-// void turnOffAllLEDs() {
-//   digitalWrite(UP_LED, LOW);
-//   digitalWrite(DOWN_LED, LOW);
-//   digitalWrite(LEFT_LED, LOW);
-//   digitalWrite(RIGHT_LED, LOW);
-// }
-//
-// void turnOnLED(String direction) {
-//   if (direction == "UP") digitalWrite(UP_LED, HIGH);
-//   else if (direction == "DOWN") digitalWrite(DOWN_LED, HIGH);
-//   else if (direction == "LEFT") digitalWrite(LEFT_LED, HIGH);
-//   else if (direction == "RIGHT") digitalWrite(RIGHT_LED, HIGH);
-// }
+bool up = true, down = true, left = true, right = true;
+
+String currentJoystickState = "NEUTRAL";
+
+
+void turnOnLED(String direction) {
+  if (direction == "UP") digitalWrite(UP_LED, HIGH);
+  else if (direction == "DOWN") digitalWrite(DOWN_LED, HIGH);
+  else if (direction == "LEFT") digitalWrite(LEFT_LED, HIGH);
+  else if (direction == "RIGHT") digitalWrite(RIGHT_LED, HIGH);
+}
+
+void turnOffLED(String direction) {
+  if (direction == "UP") digitalWrite(UP_LED, LOW);
+  else if (direction == "DOWN") digitalWrite(DOWN_LED, LOW);
+  else if (direction == "LEFT") digitalWrite(LEFT_LED, LOW);
+  else if (direction == "RIGHT") digitalWrite(RIGHT_LED, LOW);
+}
 
 void setup() {
   Serial.begin(9600);
   pinMode(upload, INPUT_PULLUP);
   pinMode(comment, INPUT_PULLUP);
 
-//   pinMode(UP_LED, OUTPUT);
-//   pinMode(DOWN_LED, OUTPUT);
-//   pinMode(LEFT_LED, OUTPUT);
-//   pinMode(RIGHT_LED, OUTPUT);
-//
-//   turnOffAllLEDs();
+  pinMode(UP_LED, OUTPUT);
+  pinMode(DOWN_LED, OUTPUT);
+  pinMode(LEFT_LED, OUTPUT);
+  pinMode(RIGHT_LED, OUTPUT);
+
+  digitalWrite(UP_LED, HIGH);
+  digitalWrite(DOWN_LED, HIGH);
+  digitalWrite(LEFT_LED, HIGH);
+  digitalWrite(RIGHT_LED, HIGH);
 }
 
 void loop() {
@@ -48,42 +56,57 @@ void loop() {
   if (abs(mapX) >= 25) mapY = 0;
   else if (abs(mapY) >= 25) mapX = 0;
 
+  String newState = "NEUTRAL";
 
   if (uploadState == LOW) {
-    Serial.println("SAVE");
+    newState = "SAVE";
   } else if (commentState == LOW) {
-    Serial.println("COMMENT");
+    newState = "COMMENT";
   } else if (mapX > 25) {
-    Serial.println("RIGHT");
+    newState = "RIGHT";
   } else if (mapX < -25) {
-    Serial.println("LEFT");
+    newState = "LEFT";
   } else if (mapY > 25) {
-    Serial.println("UP");
+    newState = "UP";
   } else if (mapY < -25) {
-    Serial.println("DOWN");
+    newState = "DOWN";
   }
 
-//   if (Serial.available()) {
-//     String command = Serial.readStringUntil('\n');
-//     command.trim();
-//
-//     if (command.startsWith("LED:")) {
-//         turnOffAllLEDs();
-//
-//         command.remove(0, 4);
-//         int start = 0;
-//
-//         while (true) {
-//         int commaIndex = command.indexOf(',', start);
-//         String dir = (commaIndex == -1) ? command.substring(start) : command.substring(start, commaIndex);
-//         dir.trim();
-//         turnOnLED(dir);
-//
-//         if (commaIndex == -1) break;
-//         start = commaIndex + 1;
-//         }
-//     }
-//   }
+  if (currentJoystickState == "NEUTRAL" && newState != "NEUTRAL") {
+    Serial.println(newState);
+  }
+  currentJoystickState = newState;
 
-  delay(300);
+  if (Serial.available()) {
+    String command = Serial.readStringUntil('\n');
+    command.trim();
+
+    if (command.startsWith("LED:") && command.length() > 4) {
+      command.remove(0, 4); // Remove "LED:"
+
+      // Flags for each direction
+      up = down = left = right = false;
+
+      int start = 0;
+      while (true) {
+        int commaIndex = command.indexOf(',', start);
+        String dir = (commaIndex == -1) ? command.substring(start) : command.substring(start, commaIndex);
+        dir.trim();  // Still needed, but must reassign
+        dir.toUpperCase(); // Also must reassign
+
+        if (dir == "UP") up = true;
+        if (dir == "DOWN") down = true;
+        if (dir == "LEFT") left = true;
+        if (dir == "RIGHT") right = true;
+
+        if (commaIndex == -1) break;
+        start = commaIndex + 1;
+      }
+    }
+  }
+    // Turn LEDs on/off based on flags
+    digitalWrite(UP_LED, up ? HIGH : LOW);
+    digitalWrite(DOWN_LED, down ? HIGH : LOW);
+    digitalWrite(LEFT_LED, left ? HIGH : LOW);
+    digitalWrite(RIGHT_LED, right ? HIGH : LOW);
 }

@@ -3,7 +3,7 @@ import threading
 
 
 class ArduinoController:
-    def __init__(self, port="/dev/cu.usbmodem1101", baudrate=9600):
+    def __init__(self, port="/dev/cu.usbmodem21301", baudrate=9600):
         self.ser = serial.Serial(port, baudrate, timeout=1)
         self.last_button = None
         self.last_joystick = None
