@@ -4,15 +4,16 @@ import os
 from gallery.Photo import Photo
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "1920,0"
-
+BLACK = (22, 22, 22)
+YELLOW = (228, 255, 107)
 
 class GUIManager:
-    def __init__(self, gallery_manager, logo_path="gallery/logo.png", arduino_controller=None,
+    def __init__(self, gallery_manager, logo_path="gallery/background.png", arduino_controller=None,
                  camera_manager=None):
         self.gallery_manager = gallery_manager
         self.window_width, self.window_height = (None, None)
         self.logo_path = logo_path
-        self.logo = None
+        self.background = None
         self.screen = None
         self.running = True
         self.arduino_controller = arduino_controller
@@ -23,16 +24,20 @@ class GUIManager:
         pygame.init()
         info = pygame.display.Info()
         self.window_width, self.window_height = info.current_w, info.current_h ## 1512x982
-        self.screen = pygame.display.set_mode((self.window_width, self.window_height)) # , pygame.FULLSCREEN)
-        pygame.display.set_caption("Photo Gallery")
+        self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.FULLSCREEN)
+        pygame.display.set_caption("Labör Archive")
 
-        self.logo = self._load_image(self.logo_path, scale=(self.window_width * 0.2, self.window_height * 0.1))
+        self.background = self._load_image(self.logo_path, scale=(self.window_width, self.window_height))
 
         while self.running:
             self.handle_events()
             # Check for button events
 
-            arduino_input_event = self.arduino_controller.get_input()
+            if self.arduino_controller:
+                arduino_input_event = self.arduino_controller.get_input()
+            else:
+                arduino_input_event = None
+
             if arduino_input_event:
                 self.process_arduino_input(arduino_input_event)
             self.render()
@@ -95,13 +100,17 @@ class GUIManager:
         self.screen.fill((0, 0, 0))  # Black background
 
         # Draw the logo
-        if self.logo:
-            self.screen.blit(self.logo, (10, 10))
+        if self.background:
+            self.screen.blit(self.background, (0, 0))
 
         # Draw current photo
         photo = self.gallery_manager.get_current_photo()
+        prev_photo = self.gallery_manager.get_previous_photo()
+        next_photo = self.gallery_manager.get_next_photo()
+
         if photo:
             self.draw_photo(photo.file_path)
+            self._draw_text(self.screen, f"{photo.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
 
             # Draw arrows
             directions = ['UP', 'DOWN', 'LEFT', 'RIGHT']
@@ -113,16 +122,20 @@ class GUIManager:
             }
 
             directions = [direction for direction in directions if check_methods[direction]()]
-            if directions:
+            if directions and self.arduino_controller:
                 self.arduino_controller.send_led_states(directions)
+        if prev_photo:
+            self.draw_photo(prev_photo.file_path, x=-85, y=421, img_width=235, img_height=150)
+        if next_photo:
+            self.draw_photo(next_photo.file_path, x=1385, y=420, img_width=235, img_height=175)
 
-    def draw_photo(self, path):
+    def draw_photo(self, path, x=550, y=350, img_width=470, img_height=350):
         if not os.path.exists(path):
             return
         photo_img = pygame.image.load(path)
-        photo_img = self._scale_to_fit(photo_img)
-        rect = photo_img.get_rect(center=(self.window_width // 2, self.window_height // 2))
-        self.screen.blit(photo_img, rect)
+        img1 = pygame.transform.scale(photo_img, (img_width, img_height))
+        rect1 = pygame.Rect(x, y, x + img_width, y + img_height)
+        self.screen.blit(img1, rect1)
 
     def _scale_to_fit(self, image):
         iw, ih = image.get_size()
@@ -136,3 +149,12 @@ class GUIManager:
         if scale:
             img = pygame.transform.scale(img, scale)
         return img
+
+    def _draw_text(self, screen, text):
+        font = pygame.font.SysFont("Arial", 16)
+        text_surface = font.render(text, True, YELLOW)
+        padding = 2
+        text_rect = text_surface.get_rect()
+        box_rect = pygame.Rect(460, 135, text_rect.width + 2 * padding, text_rect.height + 2 * padding)
+        pygame.draw.rect(screen, BLACK, box_rect)
+        screen.blit(text_surface, (box_rect.x + padding, box_rect.y + padding))

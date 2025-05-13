@@ -70,6 +70,24 @@ class GalleryManager:
     def get_current_photo(self) -> Photo:
         return self.current_photo
 
+    def get_next_photo(self) -> Photo:
+        siblings = (
+            self.current_photo.parent.children
+            if self.current_photo.parent
+            else self.root_photos
+        )
+        next_index = (self.current_sibling_index + 1) % len(siblings)
+        return siblings[next_index]
+
+    def get_previous_photo(self) -> Photo:
+        siblings = (
+            self.current_photo.parent.children
+            if self.current_photo.parent
+            else self.root_photos
+        )
+        prev_index = (self.current_sibling_index - 1) % len(siblings)
+        return siblings[prev_index]
+
     def save_structure(self):
         data = [photo.to_dict() for photo in self.root_photos]
         with open(self.storage_path, 'w') as f:
