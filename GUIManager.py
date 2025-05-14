@@ -6,14 +6,16 @@ from gallery.Photo import Photo
 os.environ['SDL_VIDEO_WINDOW_POS'] = "1920,0"
 BLACK = (22, 22, 22)
 YELLOW = (228, 255, 107)
+BG_PATH = "gallery/background.png"
+BG_NO_SIBLINGS_PATH = "gallery/background_no_siblings.png"
+
 
 class GUIManager:
-    def __init__(self, gallery_manager, logo_path="gallery/background.png", arduino_controller=None,
-                 camera_manager=None):
+    def __init__(self, gallery_manager, arduino_controller=None, camera_manager=None):
         self.gallery_manager = gallery_manager
         self.window_width, self.window_height = (None, None)
-        self.logo_path = logo_path
         self.background = None
+        self.background_no_siblings = None
         self.screen = None
         self.running = True
         self.arduino_controller = arduino_controller
@@ -23,12 +25,14 @@ class GUIManager:
     def start(self):
         pygame.init()
         info = pygame.display.Info()
-        self.window_width, self.window_height = info.current_w, info.current_h ## 1512x982
+        self.window_width, self.window_height = info.current_w, info.current_h
+        # self.window_width, self.window_height = 1512 , 982
         self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.FULLSCREEN)
         pygame.display.set_caption("Labör Archive")
 
-        self.background = self._load_image(self.logo_path, scale=(self.window_width, self.window_height))
-
+        self.background = self._load_image(BG_PATH, scale=(self.window_width, self.window_height))
+        self.background_no_siblings = self._load_image(BG_NO_SIBLINGS_PATH,
+                                                       scale=(self.window_width, self.window_height))
         while self.running:
             self.handle_events()
             # Check for button events
@@ -99,15 +103,18 @@ class GUIManager:
     def render(self):
         self.screen.fill((0, 0, 0))  # Black background
 
-        # Draw the logo
-        if self.background:
-            self.screen.blit(self.background, (0, 0))
-
         # Draw current photo
         photo = self.gallery_manager.get_current_photo()
         prev_photo = self.gallery_manager.get_previous_photo()
         next_photo = self.gallery_manager.get_next_photo()
 
+        # Draw background
+        if not prev_photo and not next_photo:
+            self.screen.blit(self.background_no_siblings, (0, 0))
+        else:
+            self.screen.blit(self.background, (0, 0))
+
+        # Draw current photo
         if photo:
             self.draw_photo(photo.file_path)
             self._draw_text(self.screen, f"{photo.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
@@ -124,9 +131,9 @@ class GUIManager:
             directions = [direction for direction in directions if check_methods[direction]()]
             if directions and self.arduino_controller:
                 self.arduino_controller.send_led_states(directions)
-        if prev_photo:
+
+        if prev_photo and next_photo:
             self.draw_photo(prev_photo.file_path, x=-85, y=421, img_width=235, img_height=150)
-        if next_photo:
             self.draw_photo(next_photo.file_path, x=1385, y=420, img_width=235, img_height=175)
 
     def draw_photo(self, path, x=550, y=350, img_width=470, img_height=350):

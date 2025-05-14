@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import os
 
@@ -70,23 +72,29 @@ class GalleryManager:
     def get_current_photo(self) -> Photo:
         return self.current_photo
 
-    def get_next_photo(self) -> Photo:
+    def get_next_photo(self) -> Photo | None:
         siblings = (
             self.current_photo.parent.children
             if self.current_photo.parent
             else self.root_photos
         )
-        next_index = (self.current_sibling_index + 1) % len(siblings)
-        return siblings[next_index]
+        if len(siblings) == 1:
+            return
+        else:
+            next_index = (self.current_sibling_index + 1) % len(siblings)
+            return siblings[next_index]
 
-    def get_previous_photo(self) -> Photo:
+    def get_previous_photo(self) -> Photo | None:
         siblings = (
             self.current_photo.parent.children
             if self.current_photo.parent
             else self.root_photos
         )
-        prev_index = (self.current_sibling_index - 1) % len(siblings)
-        return siblings[prev_index]
+        if len(siblings) == 1:
+            return
+        else:
+            prev_index = (self.current_sibling_index - 1) % len(siblings)
+            return siblings[prev_index]
 
     def save_structure(self):
         data = [photo.to_dict() for photo in self.root_photos]
