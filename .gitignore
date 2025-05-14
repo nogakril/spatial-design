@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 
 # Images and gallery content
-gallery/images/
+# gallery/images/
 
 # OS & editor stuff
 .DS_Store

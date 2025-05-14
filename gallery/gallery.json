@@ -1,110 +1,14 @@
 [
   {
-    "id": "67ab778a-4365-4ca9-b7f7-e58c1b4e965d",
-    "file_path": "gallery/images/photo_20250507_111558.jpg",
-    "timestamp": "2025-05-07T11:15:58.348032",
-    "children": [
-      {
-        "id": "bd7a4fa2-332b-4c98-953d-057b8640a449",
-        "file_path": "gallery/images/photo_20250508_154152.jpg",
-        "timestamp": "2025-05-08T15:41:52.505660",
-        "children": [
-          {
-            "id": "fac0ed4d-cebe-42f8-bc02-8dd21fc54d2b",
-            "file_path": "gallery/images/photo_20250508_154152.jpg",
-            "timestamp": "2025-05-08T15:41:52.847736",
-            "children": [
-              {
-                "id": "cc9f0e60-ed46-4a48-b01e-b9b79b262d04",
-                "file_path": "gallery/images/photo_20250513_134721.jpg",
-                "timestamp": "2025-05-13T13:47:21.589728",
-                "children": []
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "4d98ed8c-f847-442a-8684-453e2dbc59e4",
-    "file_path": "gallery/images/photo_20250507_111558.jpg",
-    "timestamp": "2025-05-07T11:15:58.691839",
+    "id": "b72394de-29d4-4394-b368-57f96dd6084a",
+    "file_path": "gallery/images/photo_20250514_140728.jpg",
+    "timestamp": "2025-05-14T14:07:28.134887",
     "children": []
   },
   {
-    "id": "c981c805-aa67-4005-bca9-a8f9f68e9125",
-    "file_path": "gallery/images/photo_20250507_111604.jpg",
-    "timestamp": "2025-05-07T11:16:04.120382",
-    "children": []
-  },
-  {
-    "id": "a5ed347c-b87e-4714-ac68-c2f86378a4c6",
-    "file_path": "gallery/images/photo_20250507_112937.jpg",
-    "timestamp": "2025-05-07T11:29:37.628612",
-    "children": []
-  },
-  {
-    "id": "de13a78e-1fd3-4240-bf3b-cc2ebbba9e1b",
-    "file_path": "gallery/images/photo_20250507_113942.jpg",
-    "timestamp": "2025-05-07T11:39:42.092535",
-    "children": [
-      {
-        "id": "f3f6e57a-4a41-4ba2-a5b5-4d11623bc779",
-        "file_path": "gallery/images/photo_20250507_113948.jpg",
-        "timestamp": "2025-05-07T11:39:48.723403",
-        "children": [
-          {
-            "id": "9122d3b6-0fc0-4a4f-ae19-10d21abe7f87",
-            "file_path": "gallery/images/photo_20250507_114712.jpg",
-            "timestamp": "2025-05-07T11:47:12.118037",
-            "children": [
-              {
-                "id": "ca11f080-ba5d-4b62-a8fd-c9120e9fb75e",
-                "file_path": "gallery/images/photo_20250507_115341.jpg",
-                "timestamp": "2025-05-07T11:53:41.089959",
-                "children": []
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "69bf7313-ae7b-4694-bbfa-88aa174313e4",
-    "file_path": "gallery/images/photo_20250507_134042.jpg",
-    "timestamp": "2025-05-07T13:40:42.041284",
-    "children": []
-  },
-  {
-    "id": "039e0bd4-5f76-4315-b7a4-7d1ea6319ab7",
-    "file_path": "gallery/images/photo_20250507_134050.jpg",
-    "timestamp": "2025-05-07T13:40:50.756612",
-    "children": []
-  },
-  {
-    "id": "c96610ee-1283-4b46-bb6b-add0090d2d05",
-    "file_path": "gallery/images/photo_20250507_134059.jpg",
-    "timestamp": "2025-05-07T13:40:59.598715",
-    "children": []
-  },
-  {
-    "id": "1e783d2e-3376-4f66-b1b2-ea4d71930ac6",
-    "file_path": "gallery/images/photo_20250507_140536.jpg",
-    "timestamp": "2025-05-07T14:05:36.806493",
-    "children": []
-  },
-  {
-    "id": "07b2c186-a3d7-4483-b4a3-73a0122d6d46",
-    "file_path": "gallery/images/photo_20250513_134612.jpg",
-    "timestamp": "2025-05-13T13:46:12.897283",
-    "children": []
-  },
-  {
-    "id": "e7e069df-b1fd-4668-9ab0-799a945b3c9e",
-    "file_path": "gallery/images/photo_20250513_134633.jpg",
-    "timestamp": "2025-05-13T13:46:33.485145",
+    "id": "ca1f65b1-3673-4870-b5fb-8ff345d5325e",
+    "file_path": "gallery/images/photo_20250514_140827.jpg",
+    "timestamp": "2025-05-14T14:08:27.207562",
     "children": []
   }
 ]

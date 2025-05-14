@@ -73,6 +73,7 @@ class GalleryManager:
         return self.current_photo
 
     def get_next_photo(self) -> Photo | None:
+        if not self.current_photo: return
         siblings = (
             self.current_photo.parent.children
             if self.current_photo.parent
@@ -85,6 +86,7 @@ class GalleryManager:
             return siblings[next_index]
 
     def get_previous_photo(self) -> Photo | None:
+        if not self.current_photo: return
         siblings = (
             self.current_photo.parent.children
             if self.current_photo.parent
