@@ -3,7 +3,6 @@ import os
 
 from gallery.Photo import Photo
 
-os.environ['SDL_VIDEO_WINDOW_POS'] = "1920,0"
 BLACK = (22, 22, 22)
 YELLOW = (228, 255, 107)
 BG_PATH = "gallery/background.png"
@@ -24,10 +23,10 @@ class GUIManager:
 
     def start(self):
         pygame.init()
-        info = pygame.display.Info()
-        self.window_width, self.window_height = info.current_w, info.current_h
-        # self.window_width, self.window_height = 1512 , 982
-        self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.FULLSCREEN)
+        # info = pygame.display.Info()
+        # self.window_width, self.window_height = info.current_w, info.current_h
+        self.window_width, self.window_height = 1024 , 600
+        self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE)
         pygame.display.set_caption("Labör Archive")
 
         self.background = self._load_image(BG_PATH, scale=(self.window_width, self.window_height))
@@ -133,10 +132,10 @@ class GUIManager:
                 self.arduino_controller.send_led_states(directions)
 
         if prev_photo and next_photo:
-            self.draw_photo(prev_photo.file_path, x=-85, y=421, img_width=235, img_height=150)
-            self.draw_photo(next_photo.file_path, x=1385, y=420, img_width=235, img_height=175)
+            self.draw_photo(prev_photo.file_path, x=-58, y=257, img_width=159, img_height=92)
+            self.draw_photo(next_photo.file_path, x=938, y=257, img_width=159, img_height=92)
 
-    def draw_photo(self, path, x=550, y=350, img_width=470, img_height=350):
+    def draw_photo(self, path, x=372, y=213, img_width=318, img_height=216):
         if not os.path.exists(path):
             return
         photo_img = pygame.image.load(path)
