@@ -3,12 +3,25 @@
     "id": "b72394de-29d4-4394-b368-57f96dd6084a",
     "file_path": "gallery/images/photo_20250514_140728.jpg",
     "timestamp": "2025-05-14T14:07:28.134887",
+    "children": [
+      {
+        "id": "ca1f65b1-3673-4870-b5fb-8ff345d5325e",
+        "file_path": "gallery/images/photo_20250514_140827.jpg",
+        "timestamp": "2025-05-14T14:08:27.207562",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "305b504f-faf0-46de-a7de-ce4e20e822ca",
+    "file_path": "gallery/images/photo_20250519_160052.jpg",
+    "timestamp": "2025-05-19T16:00:52.578380",
     "children": []
   },
   {
-    "id": "ca1f65b1-3673-4870-b5fb-8ff345d5325e",
-    "file_path": "gallery/images/photo_20250514_140827.jpg",
-    "timestamp": "2025-05-14T14:08:27.207562",
+    "id": "eb377625-b939-48b9-bc3e-b4e10c16b530",
+    "file_path": "gallery/images/photo_20250519_160130.jpg",
+    "timestamp": "2025-05-19T16:01:30.733839",
     "children": []
   }
 ]

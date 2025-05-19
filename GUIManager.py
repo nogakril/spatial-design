@@ -1,3 +1,5 @@
+import time
+
 import pygame
 import os
 
@@ -7,6 +9,8 @@ BLACK = (22, 22, 22)
 YELLOW = (228, 255, 107)
 BG_PATH = "gallery/background.png"
 BG_NO_SIBLINGS_PATH = "gallery/background_no_siblings.png"
+INSTRUCTIONS_PATH = "gallery/instructions.png"
+IDLE_TIMEOUT_SECONDS = 60
 
 
 class GUIManager:
@@ -15,23 +19,28 @@ class GUIManager:
         self.window_width, self.window_height = (None, None)
         self.background = None
         self.background_no_siblings = None
+        self.instructions = None
         self.screen = None
         self.running = True
         self.arduino_controller = arduino_controller
         self.camera = camera_manager
         self.clock = pygame.time.Clock()
+        self.last_interaction_time = time.time()
+        self.showing_instructions = True
 
     def start(self):
         pygame.init()
         # info = pygame.display.Info()
         # self.window_width, self.window_height = info.current_w, info.current_h
-        self.window_width, self.window_height = 1024 , 600
+        self.window_width, self.window_height = 1280, 720
         self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE)
         pygame.display.set_caption("Labör Archive")
 
         self.background = self._load_image(BG_PATH, scale=(self.window_width, self.window_height))
         self.background_no_siblings = self._load_image(BG_NO_SIBLINGS_PATH,
                                                        scale=(self.window_width, self.window_height))
+        self.instructions = self._load_image(INSTRUCTIONS_PATH, scale=(self.window_width, self.window_height))
+
         while self.running:
             self.handle_events()
             # Check for button events
@@ -43,9 +52,15 @@ class GUIManager:
 
             if arduino_input_event:
                 self.process_arduino_input(arduino_input_event)
-            self.render()
+            if self.showing_instructions:
+                self.screen.blit(self.instructions, (0, 0))
+            else:
+                self.render()
             pygame.display.flip()
             self.clock.tick(30)
+
+            if not self.showing_instructions and (time.time() - self.last_interaction_time > IDLE_TIMEOUT_SECONDS):
+                self.showing_instructions = True
 
         self.gallery_manager.save_structure()
         pygame.quit()
@@ -80,6 +95,10 @@ class GUIManager:
             self.on_button_press(buttons_arduino_event['button'])
 
     def on_joystick_move(self, direction: str):
+        self.last_interaction_time = time.time()
+        if self.showing_instructions:
+            self.showing_instructions = False
+
         if direction == 'UP':
             self.gallery_manager.move_up()
         elif direction == 'DOWN':
@@ -90,6 +109,10 @@ class GUIManager:
             self.gallery_manager.move_right()
 
     def on_button_press(self, button: str):
+        self.last_interaction_time = time.time()
+        if self.showing_instructions:
+            self.showing_instructions = False
+
         if button == 'SAVE':
             path = self.camera.capture_photo()
             new_photo = Photo(file_path=path)
@@ -132,10 +155,10 @@ class GUIManager:
                 self.arduino_controller.send_led_states(directions)
 
         if prev_photo and next_photo:
-            self.draw_photo(prev_photo.file_path, x=-58, y=257, img_width=159, img_height=92)
-            self.draw_photo(next_photo.file_path, x=938, y=257, img_width=159, img_height=92)
+            self.draw_photo(prev_photo.file_path, x=-35, y=310, img_width=159, img_height=110)
+            self.draw_photo(next_photo.file_path, x=1180, y=310, img_width=159, img_height=110)
 
-    def draw_photo(self, path, x=372, y=213, img_width=318, img_height=216):
+    def draw_photo(self, path, x=470, y=257, img_width=390, img_height=260):
         if not os.path.exists(path):
             return
         photo_img = pygame.image.load(path)
@@ -161,6 +184,6 @@ class GUIManager:
         text_surface = font.render(text, True, YELLOW)
         padding = 2
         text_rect = text_surface.get_rect()
-        box_rect = pygame.Rect(460, 135, text_rect.width + 2 * padding, text_rect.height + 2 * padding)
+        box_rect = pygame.Rect(400, 96, text_rect.width + 2 * padding, text_rect.height + 2 * padding)
         pygame.draw.rect(screen, BLACK, box_rect)
         screen.blit(text_surface, (box_rect.x + padding, box_rect.y + padding))
