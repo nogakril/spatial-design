@@ -8,6 +8,16 @@ const int DOWN_LED = 8;
 const int LEFT_LED = 3;
 const int RIGHT_LED = 12;
 
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+ #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
+#endif
+
+# define PIN  11
+# define NUMPIXELS 16
+
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
 bool up = true, down = true, left = true, right = true;
 
 String currentJoystickState = "NEUTRAL";
@@ -41,6 +51,17 @@ void setup() {
   digitalWrite(DOWN_LED, HIGH);
   digitalWrite(LEFT_LED, HIGH);
   digitalWrite(RIGHT_LED, HIGH);
+
+  #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
+  clock_prescale_set(clock_div_1);
+  #endif
+  // END of Trinket-specific code.
+  pixels.begin();
+  pixels.clear();
+  for (int i = 0; i < 1; i++) {
+    pixels.setPixelColor(i, pixels.Color(200, 200, 255));
+  }
+  pixels.show();
 }
 
 void loop() {
@@ -58,17 +79,17 @@ void loop() {
 
   String newState = "NEUTRAL";
 
-  if (uploadState == LOW) {
+  if (uploadState == HIGH) {
     newState = "SAVE";
-  } else if (commentState == LOW) {
+  } else if (commentState == HIGH) {
     newState = "COMMENT";
-  } else if (mapX > 25) {
-    newState = "RIGHT";
   } else if (mapX < -25) {
+    newState = "RIGHT";
+  } else if (mapX > 25) {
     newState = "LEFT";
-  } else if (mapY > 25) {
-    newState = "UP";
   } else if (mapY < -25) {
+    newState = "UP";
+  } else if (mapY > 25) {
     newState = "DOWN";
   }
 

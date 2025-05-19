@@ -51,7 +51,9 @@ class GUIManager:
                 arduino_input_event = None
 
             if arduino_input_event:
+                print(arduino_input_event)
                 self.process_arduino_input(arduino_input_event)
+
             if self.showing_instructions:
                 self.screen.blit(self.instructions, (0, 0))
             else:
