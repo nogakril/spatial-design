@@ -93,18 +93,18 @@ class GUIManager:
                     self.running = False
 
                 # Remove when joystick is implemented
-                if event.key == pygame.K_SPACE:
-                    self.on_button_press("SAVE")
-                if event.key == pygame.K_CAPSLOCK:
-                    self.on_button_press("COMMENT")
-                if event.key == pygame.K_UP:
-                    self.on_joystick_move('UP')
-                if event.key == pygame.K_DOWN:
-                    self.on_joystick_move('DOWN')
-                if event.key == pygame.K_LEFT:
-                    self.on_joystick_move('LEFT')
-                if event.key == pygame.K_RIGHT:
-                    self.on_joystick_move('RIGHT')
+                # if event.key == pygame.K_SPACE:
+                #     self.on_button_press("SAVE")
+                # if event.key == pygame.K_CAPSLOCK:
+                #     self.on_button_press("COMMENT")
+                # if event.key == pygame.K_UP:
+                #     self.on_joystick_move('UP')
+                # if event.key == pygame.K_DOWN:
+                #     self.on_joystick_move('DOWN')
+                # if event.key == pygame.K_LEFT:
+                #     self.on_joystick_move('LEFT')
+                # if event.key == pygame.K_RIGHT:
+                #     self.on_joystick_move('RIGHT')
 
     def process_arduino_input(self, buttons_arduino_event):
         if buttons_arduino_event.get('joystick'):
