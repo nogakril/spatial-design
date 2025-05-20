@@ -3,6 +3,8 @@ import time
 import pygame
 import os
 
+from screeninfo import get_monitors
+
 from gallery.Photo import Photo
 
 BLACK = (22, 22, 22)
@@ -40,10 +42,25 @@ class GUIManager:
 
     def start(self):
         pygame.init()
+
+        # Detect monitors
+        monitors = get_monitors()
+        if len(monitors) > 1:
+            monitor = monitors[1]  # Second screen
+        else:
+            monitor = monitors[0]  # Fallback to primary
+
+        # Position the window on the selected monitor
+        os.environ['SDL_VIDEO_WINDOW_POS'] = f"{monitor.x},{monitor.y}"
+
+        # Set window size based on monitor
+        self.window_width = monitor.width
+        self.window_height = monitor.height
+
         # info = pygame.display.Info()
         # self.window_width, self.window_height = info.current_w, info.current_h
-        self.window_width, self.window_height = 1280, 720
-        self.screen = pygame.display.set_mode((self.window_width, self.window_height))
+        # self.window_width, self.window_height = 1280, 720
+        self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.NOFRAME)
         pygame.display.set_caption("Labör Archive")
 
         # Load images
