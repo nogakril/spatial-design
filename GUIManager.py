@@ -9,6 +9,9 @@ BLACK = (22, 22, 22)
 YELLOW = (228, 255, 107)
 BG_PATH = "gallery/background.png"
 BG_NO_SIBLINGS_PATH = "gallery/background_no_siblings.png"
+BG_NO_PARENT_NO_CHILDREN_PATH = "gallery/background_no_parent_no_children.png"
+BG_NO_CHILDREN_PATH = "gallery/background_no_children.png"
+BG_NO_PARENT_PATH = "gallery/background_no_parent.png"
 INSTRUCTIONS_PATH = "gallery/instructions.png"
 IDLE_TIMEOUT_SECONDS = 60
 
@@ -17,8 +20,14 @@ class GUIManager:
     def __init__(self, gallery_manager, arduino_controller=None, camera_manager=None):
         self.gallery_manager = gallery_manager
         self.window_width, self.window_height = (None, None)
+
+        # bg
         self.background = None
         self.background_no_siblings = None
+        self.background_no_children = None
+        self.background_no_parent_no_children = None
+        self.background_no_parent = None
+
         self.instructions = None
         self.screen = None
         self.running = True
@@ -36,9 +45,16 @@ class GUIManager:
         self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE)
         pygame.display.set_caption("Labör Archive")
 
+        # Load images
         self.background = self._load_image(BG_PATH, scale=(self.window_width, self.window_height))
         self.background_no_siblings = self._load_image(BG_NO_SIBLINGS_PATH,
                                                        scale=(self.window_width, self.window_height))
+        self.background_no_parent_no_children = self._load_image(BG_NO_PARENT_NO_CHILDREN_PATH,
+                                                                 scale=(self.window_width, self.window_height))
+        self.background_no_children = self._load_image(BG_NO_CHILDREN_PATH,
+                                                       scale=(self.window_width, self.window_height))
+        self.background_no_parent = self._load_image(BG_NO_PARENT_PATH,
+                                                        scale=(self.window_width, self.window_height))
         self.instructions = self._load_image(INSTRUCTIONS_PATH, scale=(self.window_width, self.window_height))
 
         while self.running:
@@ -76,18 +92,18 @@ class GUIManager:
                     self.running = False
 
                 # Remove when joystick is implemented
-                # if event.key == pygame.K_SPACE:
-                #     self.on_button_press("SAVE")
-                # if event.key == pygame.K_CAPSLOCK:
-                #     self.on_button_press("CONNECT")
-                # if event.key == pygame.K_UP:
-                #     self.on_joystick_move('UP')
-                # if event.key == pygame.K_DOWN:
-                #     self.on_joystick_move('DOWN')
-                # if event.key == pygame.K_LEFT:
-                #     self.on_joystick_move('LEFT')
-                # if event.key == pygame.K_RIGHT:
-                #     self.on_joystick_move('RIGHT')
+                if event.key == pygame.K_SPACE:
+                    self.on_button_press("SAVE")
+                if event.key == pygame.K_CAPSLOCK:
+                    self.on_button_press("CONNECT")
+                if event.key == pygame.K_UP:
+                    self.on_joystick_move('UP')
+                if event.key == pygame.K_DOWN:
+                    self.on_joystick_move('DOWN')
+                if event.key == pygame.K_LEFT:
+                    self.on_joystick_move('LEFT')
+                if event.key == pygame.K_RIGHT:
+                    self.on_joystick_move('RIGHT')
 
     def process_arduino_input(self, buttons_arduino_event):
         if buttons_arduino_event.get('joystick'):
@@ -131,10 +147,18 @@ class GUIManager:
         photo = self.gallery_manager.get_current_photo()
         prev_photo = self.gallery_manager.get_previous_photo()
         next_photo = self.gallery_manager.get_next_photo()
+        no_parent = not photo.parent
 
         # Draw background
         if not prev_photo and not next_photo:
             self.screen.blit(self.background_no_siblings, (0, 0))
+        elif len(photo.children) == 0:
+            if no_parent:
+                self.screen.blit(self.background_no_parent_no_children, (0, 0))
+            else:
+                self.screen.blit(self.background_no_children, (0, 0))
+        elif no_parent:
+            self.screen.blit(self.background_no_parent, (0, 0))
         else:
             self.screen.blit(self.background, (0, 0))
 
@@ -157,10 +181,10 @@ class GUIManager:
                 self.arduino_controller.send_led_states(directions)
 
         if prev_photo and next_photo:
-            self.draw_photo(prev_photo.file_path, x=-35, y=310, img_width=159, img_height=110)
-            self.draw_photo(next_photo.file_path, x=1180, y=310, img_width=159, img_height=110)
+            self.draw_photo(prev_photo.file_path, x=-34, y=308, img_width=159, img_height=111)
+            self.draw_photo(next_photo.file_path, x=1180, y=298, img_width=190, img_height=140)
 
-    def draw_photo(self, path, x=470, y=257, img_width=390, img_height=260):
+    def draw_photo(self, path, x=450, y=247, img_width=412, img_height=275):
         if not os.path.exists(path):
             return
         photo_img = pygame.image.load(path)

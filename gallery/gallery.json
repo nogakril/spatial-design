@@ -1,8 +1,34 @@
 [
   {
-    "id": "b72394de-29d4-4394-b368-57f96dd6084a",
-    "file_path": "gallery/images/photo_20250514_140728.jpg",
+    "id": "1",
+    "file_path": "gallery/images/ex_p_1.png",
     "timestamp": "2025-05-14T14:07:28.134887",
     "children": []
+  },
+  {
+    "id": "2",
+    "file_path": "gallery/images/ex_p_2.png",
+    "timestamp": "2025-05-20T08:49:27.883384",
+    "children": [
+      {
+        "id": "2_1",
+        "file_path": "gallery/images/ex_p_3.png",
+        "timestamp": "2025-05-20T08:49:27.883384",
+        "children": []
+      },
+      {
+        "id": "2_2",
+        "file_path": "gallery/images/ex_p_4.png",
+        "timestamp": "2025-05-20T08:49:27.883384",
+        "children": [
+          {
+            "id": "2_2_1",
+            "file_path": "gallery/images/ex_p_5.png",
+            "timestamp": "2025-05-20T08:49:27.883384",
+            "children": []
+          }
+        ]
+      }
+    ]
   }
 ]
