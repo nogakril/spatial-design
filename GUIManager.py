@@ -7,6 +7,7 @@ from gallery.Photo import Photo
 
 BLACK = (22, 22, 22)
 YELLOW = (228, 255, 107)
+PURPLE = (181, 186, 255)
 BG_PATH = "gallery/background.png"
 BG_NO_SIBLINGS_PATH = "gallery/background_no_siblings.png"
 BG_NO_PARENT_NO_CHILDREN_PATH = "gallery/background_no_parent_no_children.png"
@@ -54,7 +55,7 @@ class GUIManager:
         self.background_no_children = self._load_image(BG_NO_CHILDREN_PATH,
                                                        scale=(self.window_width, self.window_height))
         self.background_no_parent = self._load_image(BG_NO_PARENT_PATH,
-                                                        scale=(self.window_width, self.window_height))
+                                                     scale=(self.window_width, self.window_height))
         self.instructions = self._load_image(INSTRUCTIONS_PATH, scale=(self.window_width, self.window_height))
 
         while self.running:
@@ -95,7 +96,7 @@ class GUIManager:
                 if event.key == pygame.K_SPACE:
                     self.on_button_press("SAVE")
                 if event.key == pygame.K_CAPSLOCK:
-                    self.on_button_press("CONNECT")
+                    self.on_button_press("COMMENT")
                 if event.key == pygame.K_UP:
                     self.on_joystick_move('UP')
                 if event.key == pygame.K_DOWN:
@@ -135,10 +136,12 @@ class GUIManager:
             path = self.camera.capture_photo()
             new_photo = Photo(file_path=path)
             self.gallery_manager.add_root_photo(new_photo)
+            self._flash_message("Photo Saved", color=YELLOW)
         elif button == 'COMMENT':
             path = self.camera.capture_photo()
             new_photo = Photo(file_path=path)
             self.gallery_manager.connect_new_child(new_photo)
+            self._flash_message("Photo Connected", color=PURPLE)
 
     def render(self):
         self.screen.fill((0, 0, 0))  # Black background
@@ -205,11 +208,20 @@ class GUIManager:
             img = pygame.transform.scale(img, scale)
         return img
 
-    def _draw_text(self, screen, text):
-        font = pygame.font.SysFont("Arial", 16)
-        text_surface = font.render(text, True, YELLOW)
+    def _draw_text(self, screen, text, size=12, color=YELLOW, x=400, y=98, font_name="menlo"):
+        font = pygame.font.SysFont(font_name, size)
+        text_surface = font.render(text, True, color)
         padding = 2
         text_rect = text_surface.get_rect()
-        box_rect = pygame.Rect(400, 96, text_rect.width + 2 * padding, text_rect.height + 2 * padding)
+        box_rect = pygame.Rect(x, y, text_rect.width + 2 * padding, text_rect.height + 2 * padding)
         pygame.draw.rect(screen, BLACK, box_rect)
         screen.blit(text_surface, (box_rect.x + padding, box_rect.y + padding))
+
+    def _flash_message(self, message, bg_color=BLACK, color=YELLOW, duration=2):
+        overlay = pygame.Surface((self.window_width, self.window_height))
+        overlay.set_alpha(180)
+        overlay.fill(bg_color)
+        self.screen.blit(overlay, (0, 0))
+        self._draw_text(self.screen, message, color=color, size=50, x=400, y=200)
+        pygame.display.flip()
+        time.sleep(duration)
