@@ -59,7 +59,7 @@ class GUIManager:
 
         # info = pygame.display.Info()
         # self.window_width, self.window_height = info.current_w, info.current_h
-        # self.window_width, self.window_height = 1280, 720
+        self.window_width, self.window_height = 1024, 600
         self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE)
         pygame.display.set_caption("Labör Archive")
 
@@ -201,10 +201,10 @@ class GUIManager:
                 self.arduino_controller.send_led_states(directions)
 
         if prev_photo and next_photo:
-            self.draw_photo(prev_photo.file_path, x=-34, y=308, img_width=159, img_height=111)
-            self.draw_photo(next_photo.file_path, x=1180, y=298, img_width=190, img_height=140)
+            self.draw_photo(prev_photo.file_path, x=-58, y=257, img_width=159, img_height=92)
+            self.draw_photo(next_photo.file_path, x=938, y=257, img_width=159, img_height=92)
 
-    def draw_photo(self, path, x=450, y=247, img_width=412, img_height=275):
+    def draw_photo(self, path, x=372, y=213, img_width=318, img_height=216):
         if not os.path.exists(path):
             return
         photo_img = pygame.image.load(path)
