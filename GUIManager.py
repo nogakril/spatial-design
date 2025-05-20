@@ -40,10 +40,10 @@ class GUIManager:
 
     def start(self):
         pygame.init()
-        info = pygame.display.Info()
-        self.window_width, self.window_height = info.current_w, info.current_h
-        # self.window_width, self.window_height = 1280, 720
-        self.screen = pygame.display.set_mode((self.window_width, self.window_height), pygame.RESIZABLE)
+        # info = pygame.display.Info()
+        # self.window_width, self.window_height = info.current_w, info.current_h
+        self.window_width, self.window_height = 1280, 720
+        self.screen = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption("Labör Archive")
 
         # Load images
